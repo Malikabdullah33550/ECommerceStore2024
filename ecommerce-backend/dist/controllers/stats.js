@@ -147,20 +147,21 @@ export const getPieCharts = TryCatch(async (req, res, next) => {
         charts = JSON.parse(myCache.get("admin-pie-charts"));
     }
     else {
-        const [processingOrder, shippedOrder, deliveredOrder, categories, productsCount, outOfStock,] = await Promise.all([
+        const allOrderPromise = Order.find({}).select([
+            "total",
+            "discount",
+            "subtotal",
+            "tax",
+            "shippingCharges",
+        ]);
+        const [processingOrder, shippedOrder, deliveredOrder, categories, productsCount, outOfStock, allOrders,] = await Promise.all([
             Order.countDocuments({ status: "Processing" }),
             Order.countDocuments({ status: "Shipped" }),
             Order.countDocuments({ status: "Delivered" }),
             Product.distinct("category"),
             Product.countDocuments(),
             Product.countDocuments({ stock: 0 }),
-            Order.find({}).select([
-                "total",
-                "discount",
-                "subtotal",
-                "tax",
-                "shippingCharges",
-            ]),
+            allOrderPromise,
         ]);
         const orderFullfillment = {
             processing: processingOrder,
