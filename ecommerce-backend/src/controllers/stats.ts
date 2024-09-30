@@ -217,6 +217,9 @@ export const getPieCharts = TryCatch(async (req, res, next) => {
       productsCount,
       outOfStock,
       allOrders,
+      allUsers,
+      adminUsers,
+      customerUsers,
     ] = await Promise.all([
       Order.countDocuments({ status: "Processing" }),
       Order.countDocuments({ status: "Shipped" }),
@@ -225,6 +228,9 @@ export const getPieCharts = TryCatch(async (req, res, next) => {
       Product.countDocuments(),
       Product.countDocuments({ stock: 0 }),
       allOrderPromise,
+      User.find({}).select(["dob"]),
+      User.countDocuments({ role: "admin" }),
+      User.countDocuments({ role: "user" }),
     ]);
 
     const orderFullfillment = {
@@ -242,10 +248,53 @@ export const getPieCharts = TryCatch(async (req, res, next) => {
       inStock: productsCount - outOfStock,
       outOfStock,
     };
+
+    const grossIncome = allOrders.reduce(
+      (prev, order) => prev + (order.total || 0),
+      0
+    );
+
+    const discount = allOrders.reduce(
+      (prev, order) => prev + (order.discount || 0),
+      0
+    );
+
+    const productionCost = allOrders.reduce(
+      (prev, order) => prev + (order.shippingCharges || 0),
+      0
+    );
+
+    const burnt = allOrders.reduce((prev, order) => prev + (order.tax || 0), 0);
+
+    const marketingCost = Math.round(grossIncome * (30 / 100));
+    // const marketingCost = process.env.MARKETING_COST;
+
+    const netMargin =
+      grossIncome - discount - productionCost - burnt - marketingCost;
+
+    const revenueDistribution = {
+      netMargin,
+      discount,
+      productionCost,
+      burnt,
+      marketingCost,
+    };
+    const usersAgeGroup = {
+      teen: allUsers.filter((i) => i.age < 20).length,
+      adult: allUsers.filter((i) => i.age >= 20 && i.age < 40).length,
+      old: allUsers.filter((i) => i.age > 40).length,
+    };
+    const adminCustomer = {
+      admin: adminUsers,
+      customer: customerUsers,
+    };
     charts = {
       orderFullfillment,
       productCategories,
       stockAvailability,
+      revenueDistribution,
+      usersAgeGroup,
+      adminCustomer,
     };
   }
 
