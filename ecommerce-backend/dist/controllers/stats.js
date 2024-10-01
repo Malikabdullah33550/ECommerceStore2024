@@ -99,16 +99,25 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
             product: productsCount,
             order: allOrders.length,
         };
-        const orderMonthCounts = new Array(6).fill(0);
-        const orderMonthlyRevenue = new Array(6).fill(0);
-        lastSixMonthOrders.forEach((order) => {
-            const creationDate = order.createdAt;
-            const monthDiff = (today.getMonth() - creationDate.getMonth() + 12) % 12;
-            if (monthDiff < 6) {
-                orderMonthCounts[6 - monthDiff - 1] += 1;
-                orderMonthlyRevenue[6 - monthDiff - 1] += order.total;
-            }
+        const orderMonthCounts = getChartData({
+            length: 6,
+            today,
+            docArr: lastSixMonthOrders,
         });
+        const orderMonthlyRevenue = getChartData({
+            length: 6,
+            today,
+            docArr: lastSixMonthOrders,
+            property: "total",
+        });
+        // lastSixMonthOrders.forEach((order) => {
+        //   const creationDate = order.createdAt;
+        //   const monthDiff = (today.getMonth() - creationDate.getMonth() + 12) % 12;
+        //   if (monthDiff < 6) {
+        //     orderMonthCounts[6 - monthDiff - 1] += 1;
+        //     orderMonthlyRevenue[6 - monthDiff - 1] += order.total;
+        //   }
+        // });
         const categoryCount = await getInventories({
             categories,
             productsCount,
