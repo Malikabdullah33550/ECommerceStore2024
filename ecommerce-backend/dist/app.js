@@ -11,6 +11,7 @@ import orderRoute from "./routes/order.js";
 import paymentRoute from "./routes/payment.js";
 import dashboardRoute from "./routes/stats.js";
 import Stripe from "stripe";
+import cors from "cors";
 config({
     path: "./.env",
 });
@@ -23,6 +24,7 @@ export const myCache = new NodeCache();
 const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cors());
 app.get("/", (req, res) => {
     res.send("API Working with /api/v1");
 });
