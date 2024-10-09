@@ -16,7 +16,7 @@ config({
     path: "./.env",
 });
 const port = process.env.PORT || 4000;
-const mongoURI = process.env.MONGO_URI || "";
+const mongoURI = process.env.MONGO_URI || `mongodb://localhost:27017/Ecommerce_2024`;
 const stripeKey = process.env.STRIPE_KEY || "";
 connectDB(mongoURI);
 export const stripe = new Stripe(stripeKey);
