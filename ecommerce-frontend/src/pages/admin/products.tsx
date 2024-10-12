@@ -55,7 +55,7 @@ const Products = () => {
   }
 
   useEffect(() => {
-    if (data)
+    if (data) {
       setRows(
         data.products.map((i) => ({
           photo: <img src={`${server}/${i.photo}`} />,
@@ -65,6 +65,7 @@ const Products = () => {
           action: <Link to={`/admin/product/${i._id}`}>Manage</Link>,
         }))
       );
+    }
   }, [data]);
 
   const Table = TableHOC<DataType>(
