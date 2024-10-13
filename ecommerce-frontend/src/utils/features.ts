@@ -14,12 +14,15 @@ type ResType =
 
 export const responseToast = (
   res: ResType,
-  navigate: NavigateFunction | null,
+  navigate: NavigateFunction,
   url: string
 ) => {
   if ("data" in res) {
     toast.success(res.data.message);
-    if (navigate) navigate(url);
+    if (navigate) {
+      navigate(url);
+      // navigate(url);
+    }
   } else {
     const error = res.error as FetchBaseQueryError;
     const messageResponse = error.data as MessageResponse;
