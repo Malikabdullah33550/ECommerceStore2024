@@ -15,9 +15,9 @@ import cors from "cors";
 config({
     path: "./.env",
 });
-const port = process.env.PORT || 4000;
-const mongoURI = process.env.MONGO_URI || `mongodb://localhost:27017/Ecommerce_2024`;
-const stripeKey = process.env.STRIPE_KEY || "";
+const port = process.env.VITE_PORT;
+const mongoURI = process.env.VITE_MONGO_URI || "";
+const stripeKey = process.env.VITE_STRIPE_KEY || "";
 connectDB(mongoURI);
 export const stripe = new Stripe(stripeKey);
 export const myCache = new NodeCache();
@@ -37,5 +37,5 @@ app.use("/api/v1/dashboard", dashboardRoute);
 app.use("/uploads", express.static("uploads"));
 app.use(errorMiddleware);
 app.listen(port, () => {
-    console.log(`Server is working on http://lcoalhost:${port}`);
+    console.log(`Server is working on http://localhost:${port}`);
 });

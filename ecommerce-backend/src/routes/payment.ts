@@ -12,7 +12,7 @@ import {
 const app = express.Router();
 
 // Route = /api/v1/payment/create
-app.post("/create", adminOnly, createPaymentIntent);
+app.post("/create", createPaymentIntent);
 
 // Route = /api/v1/payment/discount
 app.get("/discount", applyDiscount);
