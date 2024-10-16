@@ -52,25 +52,67 @@ export type Order = {
   _id: string;
 };
 
-// const a = {
-//       _id: "66f726cf571f8bf3c1130883",
-//       user: "abc",
-//       subtotal: 5000,
-//       tax: 200,
-//       shippingCharges: 10,
-//       discount: 200,
-//       total: 5000,
-//       status: "Processing",
-//       orderItems: [
-//         {
-//           name: "Valorant",
-//           photo: "uploads\fd409615-acfb-4c3b-90a6-0eb91134fdc0.png",
-//           price: 60000,
-//           quantity: 2,
-//           productId: "66f423b0d2f388cd7711a7f2",
-//           _id: "66f726cf571f8bf3c1130884",
-//         },
-//       ],
-//     },
-//   ],
-// };
+type CountAndChange = {
+  revenue: number;
+  product: number;
+  user: number;
+  order: number;
+};
+
+type LatestTransaction = {
+  _id: string;
+  amount: number;
+  discount: number;
+  quantity: number;
+  status: string;
+};
+
+export type Stats = {
+  categoryCount: Record<string, number>[];
+  changePercent: CountAndChange;
+  count: CountAndChange;
+  chart: {
+    order: number[];
+    revenue: number[];
+  };
+  userRatio: {
+    male: number;
+    female: number;
+  };
+  latestTransaction: LatestTransaction[];
+};
+
+type RevenueDistribution = {
+  netMargin: number;
+  discount: number;
+  productionCost: number;
+  burnt: number;
+  marketingCost: number;
+};
+
+type OrderFullfillment = {
+  processing: number;
+  shipped: number;
+  delivered: number;
+};
+
+type UsersAgeGroup = {
+  teen: number;
+  adult: number;
+  old: number;
+};
+
+export type Pie = {
+  orderFullfillment: OrderFullfillment;
+  productCategories: Record<string, number>[];
+  stockAvailability: {
+    inStock: number;
+    outOfStock: number;
+  };
+  revenueDistribution: RevenueDistribution;
+  usersAgeGroup: UsersAgeGroup;
+  adminCustomer: {
+    admin: number;
+    customer: number;
+  };
+};
