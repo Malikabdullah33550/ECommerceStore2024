@@ -63,7 +63,7 @@ const Shipping = () => {
         <BiArrowBack />
       </button>
 
-      <form onSubmit={SubmitHandler}>
+      <form onSubmit={submitHandler}>
         <h1>Shipping Address</h1>
         <input
           required

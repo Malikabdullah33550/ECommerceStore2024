@@ -3,6 +3,11 @@ import { FaTrash } from "react-icons/fa";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
+import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { useAllUsersQuery } from "../../redux/api/userAPI";
+import toast from "react-hot-toast";
+import { CustomError } from "../../types/api-types";
 
 interface DataType {
   avatar: ReactElement;
@@ -88,7 +93,16 @@ const arr: Array<DataType> = [
 ];
 
 const Customers = () => {
+  const { user } = useSelector((state: RootState) => state.userReducer);
+
+  const { isLoading, data, isError, error } = useAllUsersQuery(user?._id!);
+
   const [rows, setRows] = useState<DataType[]>(arr);
+
+  if (isError) {
+    const err = error as CustomError;
+    toast.error(err.data.message);
+  }
 
   const Table = TableHOC<DataType>(
     columns,
