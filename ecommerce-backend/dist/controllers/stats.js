@@ -280,7 +280,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
         });
         charts = {
             users: userCounts,
-            product: productCounts,
+            products: productCounts,
             orders: orderCounts,
         };
         myCache.set(key, JSON.stringify(charts));
@@ -337,7 +337,7 @@ export const getLineCharts = TryCatch(async (req, res, next) => {
         });
         charts = {
             users: userCounts,
-            product: productCounts,
+            products: productCounts,
             discount,
             revenue,
         };

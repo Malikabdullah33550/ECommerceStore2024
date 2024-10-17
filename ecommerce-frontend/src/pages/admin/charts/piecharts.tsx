@@ -6,18 +6,22 @@ import { usePieQuery } from "../../../redux/api/dashboardAPI";
 import { RootState } from "../../../redux/store";
 import { CustomError } from "../../../types/api-types";
 import { Skeleton } from "../../../components/loader";
+import { categories } from "../../../assets/data.json";
+import { Navigate } from "react-router-dom";
 
 const PieCharts = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
 
-  const { isLoading, data, error, isError } = usePieQuery(user?._id!);
+  const { isLoading, data, isError } = usePieQuery(user?._id!);
 
-  const stats = data?.charts!;
+  const order = data?.charts.orderFullfillment!;
+  const categories = data?.charts.productCategories!;
+  const stock = data?.charts.stockAvailability!;
+  const revenue = data?.charts.revenueDistribution!;
+  const ageGroup = data?.charts.usersAgeGroup!;
+  const adminCustomer = data?.charts.adminCustomer!;
 
-  if (isError) {
-    const err = error as CustomError;
-    toast.error(err.data.message);
-  }
+  if (isError) return <Navigate to={"/admin/dashboard"} />;
   return (
     <div className="admin-container">
       <AdminSidebar />
@@ -31,7 +35,7 @@ const PieCharts = () => {
               <div>
                 <PieChart
                   labels={["Processing", "Shipped", "Delivered"]}
-                  data={[12, 9, 13]}
+                  data={[order.processing, order.shipped, order.delivered]}
                   backgroundColor={[
                     `hsl(110,80%, 80%)`,
                     `hsl(110,80%, 50%)`,
@@ -45,11 +49,15 @@ const PieCharts = () => {
 
             <section>
               <div>
+                {/* {chart} */}
                 <DoughnutChart
-                  labels={data.categories.map((i) => i.heading)}
-                  data={data.categories.map((i) => i.value)}
-                  backgroundColor={data.categories.map(
-                    (i) => `hsl(${i.value * 4}, ${i.value}%, 50%)`
+                  labels={categories.map((i) => Object.keys(i)[0])}
+                  data={categories.map((i) => Object.values(i)[0])}
+                  backgroundColor={categories.map(
+                    (i) =>
+                      `hsl(${Object.values(i)[0] * 4}, ${
+                        Object.values(i)[0]
+                      }%, 50%)`
                   )}
                   legends={false}
                   offset={[0, 0, 0, 80]}
@@ -62,7 +70,7 @@ const PieCharts = () => {
               <div>
                 <DoughnutChart
                   labels={["In Stock", "Out Of Stock"]}
-                  data={[40, 20]}
+                  data={[stock.inStock, stock.outOfStock]}
                   backgroundColor={["hsl(269,80%,40%)", "rgb(53, 162, 255)"]}
                   legends={false}
                   offset={[0, 80]}
@@ -82,7 +90,13 @@ const PieCharts = () => {
                     "Production Cost",
                     "Net Margin",
                   ]}
-                  data={[32, 18, 5, 20, 25]}
+                  data={[
+                    revenue.marketingCost,
+                    revenue.discount,
+                    revenue.burnt,
+                    revenue.productionCost,
+                    revenue.netMargin,
+                  ]}
                   backgroundColor={[
                     "hsl(110,80%,40%)",
                     "hsl(19,80%,40%)",
@@ -105,7 +119,7 @@ const PieCharts = () => {
                     "Adult (20-40)",
                     "Older (above 40)",
                   ]}
-                  data={[30, 250, 70]}
+                  data={[ageGroup.teen, ageGroup.adult, ageGroup.old]}
                   backgroundColor={[
                     `hsl(10, ${80}%, 80%)`,
                     `hsl(10, ${80}%, 50%)`,
@@ -121,7 +135,7 @@ const PieCharts = () => {
               <div>
                 <DoughnutChart
                   labels={["Admin", "Customers"]}
-                  data={[40, 250]}
+                  data={[adminCustomer.admin, adminCustomer.customer]}
                   backgroundColor={[`hsl(335, 100%, 38%)`, "hsl(44, 98%, 50%)"]}
                   offset={[0, 50]}
                 />

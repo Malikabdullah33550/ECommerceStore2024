@@ -377,7 +377,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
 
     charts = {
       users: userCounts,
-      product: productCounts,
+      products: productCounts,
       orders: orderCounts,
     };
 
@@ -441,7 +441,7 @@ export const getLineCharts = TryCatch(async (req, res, next) => {
 
     charts = {
       users: userCounts,
-      product: productCounts,
+      products: productCounts,
       discount,
       revenue,
     };
